@@ -389,7 +389,6 @@ else: ?>
                             $column_name = $columns[$key]['label'];
                             $column_name = ($lang_cols) ? lang($column_name) : $column_name;
                             $column_desc = '';
-                            $column_required = isset($columns[$key]['required']) && $columns[$key]['required'];
 
                             if (isset($columns[$key]['desc']) && !empty($columns[$key]['desc'])) {
                                 $column_desc = lang($columns[$key]['desc']);
