@@ -84,6 +84,19 @@
   }
 
 
+  span.required {
+    &:after {
+      @extend %fa-icon;
+      @extend .fal;
+
+      content: fa-content($fa-var-asterisk);
+      color: color(brand-danger);
+      font-size: 0.5em;
+      position: relative;
+      top: -3px;
+    }
+  }
+
   .file-field__dropzone {
     margin-top: 0px;
 
