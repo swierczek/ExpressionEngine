@@ -229,7 +229,7 @@ class Moblog
         $response = fgets($this->fp, 1024);
 
         // Check if the response is from a POP3 server
-        if ($response === false || substr($response, 0, 3) !== '+OK') {
+        if ($response === false || strncasecmp($response, '+OK', 3) != 0) {
             // Handle the case where the response is not from a POP3 server
             $this->message_array[] = 'invalid_server_response';
             @fclose($this->fp);
