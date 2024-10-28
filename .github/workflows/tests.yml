@@ -95,6 +95,11 @@ jobs:
     cypress:
         needs: build-for-testing
         runs-on: ${{ matrix.os }}
+        container:
+            # Cypress Docker image from https://hub.docker.com/r/cypress/included
+            # with Cypress globally pre-installed
+            image: cypress/included:latest
+            options: --user 1001
         timeout-minutes: 45
 
         strategy:
@@ -264,6 +269,7 @@ jobs:
                 parallel: true
                 group: PHP${{ matrix.php }}
               env:
+                CYPRESS_INSTALL_BINARY: 0
                 CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
                 CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
