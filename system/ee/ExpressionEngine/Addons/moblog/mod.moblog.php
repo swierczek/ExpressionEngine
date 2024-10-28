@@ -223,7 +223,7 @@ class Moblog
         stream_set_blocking($this->fp, false);
 
         // Set a timeout for the socket
-        stream_set_timeout($this->fp, 10); // 5 seconds timeout
+        stream_set_timeout($this->fp, 10); // 10 seconds timeout
 
         // Attempt to read from the socket
         $response = fgets($this->fp, 1024);
