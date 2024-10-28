@@ -95,11 +95,6 @@ jobs:
     cypress:
         needs: build-for-testing
         runs-on: ${{ matrix.os }}
-        container:
-            # Cypress Docker image from https://hub.docker.com/r/cypress/included
-            # with Cypress globally pre-installed
-            image: cypress/included:latest
-            options: --user 1001
         timeout-minutes: 45
 
         strategy:
@@ -210,17 +205,17 @@ jobs:
 
             - name: Setup Permissions
               run: |
-                  chmod 666 system/user/config/config.php
-                  chmod 777 system/user/config
-                  chmod -R 777 system/user/cache
-                  chmod -R 777 system/user/templates
-                  chmod -R 777 system/user/language
-                  chmod -R 777 system/user/logs
-                  chmod -R 777 tests/cypress/support/tmp
-                  chmod -R 777 tests/cypress/support/file-sync/uploads
-                  chmod -R 777 images
-                  chmod -R 777 themes/user
-                  chmod -R 777 tests/cypress/cypress/screenshots
+                  sudo chmod 666 system/user/config/config.php
+                  sudo chmod 777 system/user/config
+                  sudo chmod -R 777 system/user/cache
+                  sudo chmod -R 777 system/user/templates
+                  sudo chmod -R 777 system/user/language
+                  sudo chmod -R 777 system/user/logs
+                  sudo chmod -R 777 tests/cypress/support/tmp
+                  sudo chmod -R 777 tests/cypress/support/file-sync/uploads
+                  sudo chmod -R 777 images
+                  sudo chmod -R 777 themes/user
+                  sudo chmod -R 777 tests/cypress/cypress/screenshots
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -232,7 +227,7 @@ jobs:
 
             - name: Configure MySQL
               run: |
-                systemctl start mysql
+                sudo systemctl start mysql
                 mysql -u root -proot -e 'CREATE DATABASE `ee-test`;'
                 mysql -u root -proot -e 'SET GLOBAL sql_mode="ONLY_FULL_GROUP_BY,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION";'
 
@@ -269,7 +264,6 @@ jobs:
                 parallel: true
                 group: PHP${{ matrix.php }}
               env:
-                CYPRESS_INSTALL_BINARY: 0
                 CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
                 CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
