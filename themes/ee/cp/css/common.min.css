@@ -52239,6 +52239,7 @@ ul.field-reorder-drop,
   color: var(--ee-ee-update) !important;
   background: var(--ee-ee-update-bg);
   border-radius: 0;
+  margin-bottom: 0;
 }
 .ee-sidebar__items .ee-sidebar__version.ee-sidebar__version--update #ee-logomark {
   fill: var(--ee-ee-update) !important;
