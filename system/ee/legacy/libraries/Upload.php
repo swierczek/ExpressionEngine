@@ -57,6 +57,7 @@ class EE_Upload
     {
         if (count($props) > 0) {
             $this->initialize($props);
+            return true;
         }
 
         ee()->load->helper('xss');
@@ -798,11 +799,22 @@ class EE_Upload
             return false;
         }
 
-        // We can't simply check for `<?` because that's valid XML and is
-        // allowed in files. Check for `<?php` and `<?=` instead.
-        if (strpos($data, '<?php') !== false || strpos($data, '<?=') !== false) {
-            return false;
+        // Check for various PHP opening tags and their variations
+        $php_opening_tags = [
+            '<?php',
+            '<?=',
+            '<? ',
+            "<?\n",
+            '<?/*',
+        ];
+
+        foreach ($php_opening_tags as $tag) {
+            if (stripos($data, $tag) !== false) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     /**

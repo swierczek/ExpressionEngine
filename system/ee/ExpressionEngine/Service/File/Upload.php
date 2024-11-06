@@ -390,8 +390,22 @@ class Upload
             )
         );
 
-        // Check to see that the extension of $original_name is the same as the $file->file_name
-        if (substr($original_name, strrpos($original_name, '.')) != substr($file->file_name, strrpos($file->file_name, '.'))) {
+        // Ensure the file extension of the original name matches the file's current name
+        $original_ext_pos = strrpos($original_name, '.');
+        $file_ext_pos = strrpos($file->file_name, '.');
+
+        if ($original_ext_pos === false || $file_ext_pos === false || substr($original_name, $original_ext_pos) != substr($file->file_name, $file_ext_pos)) {
+            ee('CP/Alert')->makeInline('shared-form')
+                ->asIssue()
+                ->withTitle(lang('file_conflict'))
+                ->addToBody(lang('invalid_filename'))
+                ->now();
+
+            return $result;
+        }
+
+        // Ensure the file extension of the original name matches the file's current name
+        if (substr($original_name, $original_ext_pos) != substr($file->file_name, $file_ext_pos)) {
             ee('CP/Alert')->makeInline('shared-form')
                 ->asIssue()
                 ->withTitle(lang('file_conflict'))
