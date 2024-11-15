@@ -459,7 +459,7 @@ class Fluid_field_parser
                 $fieldCountInGroup = count($group['fields']);
 
                 // Process Fixed Order parameter {fields fixed_order="field_1|field_2"}
-                $fixed_order = explode('|', $chunk['params']['fixed_order'] ?? '');
+                $fixed_order = (empty($chunk['params']['fixed_order'] ?? '')) ? null : explode('|', $chunk['params']['fixed_order']);
 
                 if(!empty($fixed_order)) {
                     $fields = [];
@@ -488,21 +488,26 @@ class Fluid_field_parser
                     $conditionalUsed = strlen($my_tagdata) !== strlen($chunk['content']);
                     $cond[$fluid_field_name . ':' . $field_name] = false; // Reset for the next pass
 
+                    $firstInGroup = ($fieldCount == 0);
+                    $lastInGroup = (($fieldCount + 1) == $fieldCountInGroup);
+                    $prevField = ($firstInGroup) ? ($g > 0 && isset($groups[$g - 1]) ? $groups[$g - 1]['fields'][count($groups[$g - 1]['fields']) - 1] : null) : $group['fields'][$fieldCount - 1];
+                    $nextField = ($lastInGroup) ? ($g < $total_groups && isset($groups[$g + 1]) ? $groups[$g + 1]['fields'][0] : null) : $group['fields'][$fieldCount + 1];
+
                     $meta = [
-                        $fluid_field_name . ':first' => (int) ($i == 0),
-                        $fluid_field_name . ':last' => (int) (($i + 1) == $total_fields),
+                        $fluid_field_name . ':first' => (int) ($g == 0 && $firstInGroup),
+                        $fluid_field_name . ':last' => (int) (($g + 1) == $total_groups && $lastInGroup),
                         $fluid_field_name . ':count' => $i + 1,
                         $fluid_field_name . ':index' => $i,
-                        $fluid_field_name . ':first_in_group' => (int) ($fieldCount == 0),
-                        $fluid_field_name . ':last_in_group' => (int) (($fieldCount + 1) == $fieldCountInGroup),
+                        $fluid_field_name . ':first_in_group' => (int) $firstInGroup,
+                        $fluid_field_name . ':last_in_group' => (int) $lastInGroup,
                         $fluid_field_name . ':count_in_group' => $fieldCount + 1,
                         $fluid_field_name . ':index_in_group' => $fieldCount,
                         $fluid_field_name . ':current_field_name' => $field_name,
-                        $fluid_field_name . ':next_field_name' => (($i + 1) < $total_fields) ? $fluid_field_data[$i + 1]->ChannelField->field_name : null,
-                        $fluid_field_name . ':prev_field_name' => ($i > 0) ? $fluid_field_data[$i - 1]->ChannelField->field_name : null,
-                        $fluid_field_name . ':current_fieldtype' => $fluid_field_data[$i]->ChannelField->field_type,
-                        $fluid_field_name . ':next_fieldtype' => (($i + 1) < $total_fields) ? $fluid_field_data[$i + 1]->ChannelField->field_type : null,
-                        $fluid_field_name . ':prev_fieldtype' => ($i > 0) ? $fluid_field_data[$i - 1]->ChannelField->field_type : null,
+                        $fluid_field_name . ':next_field_name' => ($nextField) ? $nextField->ChannelField->field_name : null,
+                        $fluid_field_name . ':prev_field_name' => ($prevField) ? $prevField->ChannelField->field_name : null,
+                        $fluid_field_name . ':current_fieldtype' => $groups[$g]['fields'][$fieldCount]->ChannelField->field_type,
+                        $fluid_field_name . ':next_fieldtype' => ($nextField) ? $nextField->ChannelField->field_type : null,
+                        $fluid_field_name . ':prev_fieldtype' => ($prevField) ? $prevField->ChannelField->field_type : null,
                     ];
 
                     // a couple aliases to cover some additionally intuitive names
@@ -542,6 +547,7 @@ class Fluid_field_parser
 
             // If we didn't have any chunks and our output is empty pass group_tagdata along
             if(empty($chunks) && empty($group_output)) {
+                $i += count($group['fields']);
                 $group_output = $group_tagdata;
             }
 
