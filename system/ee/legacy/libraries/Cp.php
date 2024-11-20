@@ -178,7 +178,7 @@ class Cp
             'cp.exampleTemplateUrls' => [
                 'default' => ee('CP/URL', 'design/copy/fields/{id}')->compile(),
                 'fields' => ee('CP/URL', 'design/copy/fields/{id}')->compile(),
-                'field_groups' => ee('CP/URL', 'design/copy/fieldgroup/{id}s')->compile(),
+                'field_groups' => ee('CP/URL', 'design/copy/fieldgroups/{id}')->compile(),
                 'channels' => ee('CP/URL', 'design/copy/channels/{id}')->compile(),
                 'fluid_field' => ee('CP/URL', 'design/copy/fluid/{fluid_id}/field/{id}')->compile(),
                 'fluid_fieldgroup' => ee('CP/URL', 'design/copy/fluid/{fluid_id}/group/{id}')->compile(),
