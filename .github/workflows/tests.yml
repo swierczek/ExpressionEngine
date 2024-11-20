@@ -254,14 +254,23 @@ jobs:
             - name: Get Chrome Version
               id: get-chrome-version
               run: |
-                latest_version=$(curl -s 'https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Linux&num=1&offset=3' | jq -r '.[0].version')
-                echo "Version of Chrome to use: $latest_version"
-                echo "::set-output name=chrome_version::$latest_version"
+                latest_version=$(curl -s 'https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Linux&num=1&offset=0' | jq -r '.[0].version')
+                major_version=$(echo $latest_version | cut -d '.' -f 1)
+                previous_major_version=$((major_version - 1))
+                previous_version="${previous_major_version}"
+                echo "Previous major version of Chrome: $previous_version"
+                echo "chrome_version=$previous_version" >> $GITHUB_OUTPUT
 
             - name: Install Chrome
               uses: browser-actions/setup-chrome@latest
               with:
                 chrome-version: ${{ steps.get-chrome-version.outputs.chrome_version }}
+                install-chromedriver: true
+
+            - name: Output the Chrome version and info
+              run: |
+                echo "Chrome version: ${{ steps.get-chrome-version.outputs.chrome_version }}"
+                echo "Chrome Binary: ${{ steps.setup-chrome.outputs.chrome-path }}"
 
             - name: Run Cypress Tests
               if: matrix.php != '5.6'
