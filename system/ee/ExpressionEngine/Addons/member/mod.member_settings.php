@@ -780,6 +780,8 @@ class Member_settings extends Member
         // we need to reset this, because might have already been populated by channel:entries tag
         ee()->api_channel_fields->custom_fields = array();
 
+        $hasFileField = false;
+
         if (strpos($template, '{/custom_profile_fields}') !== false || !is_null(ee()->TMPL->template_engine)) {
             if ($query->num_rows() > 0) {
                 $fields = [];
@@ -799,6 +801,8 @@ class Member_settings extends Member
                     $required = $field->isRequired() ? "<span class='alert'>*</span>&nbsp;" : '';
 
                     $fieldForm = $field->getForm();
+
+                    $hasFileField = (in_array($field->getType(), ['file', 'file_grid'])) ? true : $hasFileField;
 
                     $temp = ee()->functions->prep_conditionals($temp, [
                         'has_error' => !empty(ee()->session->flashdata('errors')['error:'. $field->getShortName()] ?? '')
@@ -911,7 +915,7 @@ class Member_settings extends Member
             );
 
             // check the template for file fields
-            if (strpos($template, '_hidden_file') !== false) {
+            if (strpos($template, '_hidden_file') !== false || (!is_null(ee()->TMPL->template_engine) && $hasFileField)) {
                 $data['enctype'] = 'multi';
             }
 
@@ -931,6 +935,8 @@ class Member_settings extends Member
                 'open' => $open,
                 'fields' => $fields,
                 'close' => $close,
+                'username' => $result_row['username'] ?? '',
+                'email' => $result_row['email'] ?? '',
             ]);
 
             return $return;
