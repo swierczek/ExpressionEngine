@@ -18,6 +18,15 @@ use ExpressionEngine\Model\Channel\ChannelField;
 */
 class Copy extends AbstractDesignController
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        ee()->load->library('api');
+        ee()->legacy_api->instantiate('template_structure');
+    }
+
+
     public function fields(int $id)
     {
         $field = ee('Model')->get('ChannelField', $id)->first();
