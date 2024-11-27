@@ -130,7 +130,10 @@ class Copy extends AbstractDesignController
         // Get the field variables
         $vars['fluidFields'][$field->field_name] = $fluidTempGen->getFieldVars($field);
 
-        return ee('View/Stub')->make('fluid_field:field')->setTemplateType('copy')->render($vars);
+        return ee('View/Stub')->make('fluid_field:field')
+            ->setTemplateEngine(ee()->api_template_structure->get_default_template_engine())
+            ->setTemplateType('copy')
+            ->render($vars);
     }
 
     private function fluidFieldGroup(ChannelField $fluidField, int $field_group_id)
@@ -158,7 +161,10 @@ class Copy extends AbstractDesignController
             $vars['fluidFieldGroups'][$fieldGroup->short_name][$field->field_name] = $fluidTempGen->getFieldVars($field);
         }
 
-        return  ee('View/Stub')->make('fluid_field:field')->setTemplateType('copy')->render($vars);
+        return ee('View/Stub')->make('fluid_field:field')
+            ->setTemplateEngine(ee()->api_template_structure->get_default_template_engine())
+            ->setTemplateType('copy')
+            ->render($vars);
     }
 }
 
