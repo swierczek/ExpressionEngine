@@ -814,8 +814,6 @@ class EE_Upload
         $php_opening_tags = [
             '<?php',
             '<?=',
-            '<? ',
-            "<?\n",
             '<?/*',
         ];
 
