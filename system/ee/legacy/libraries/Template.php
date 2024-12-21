@@ -409,19 +409,11 @@ class EE_Template
                 }
             }
 
-            // also parse the new {partial="group/template"} format
+            // Handle any partials using the new format {partial="group/template"}
             if (strpos($this->template, LD . 'partial') !== false && preg_match_all("/(" . LD . "partial\s*=)(.*?)" . RD . "/s", $this->template, $matches)) {
                 // $matches[2] is "group/template"
                 foreach ($matches[2] as $key => $val) {
                     $parts = preg_split("/\s+/", $val, 2);
-
-                    // $this->embed_vars = (isset($parts[1])) ? ee('Variables/Parser')->parseTagParameters($parts[1]) : array();
-
-                    // if ($this->embed_vars === false) {
-                    //     $this->embed_vars = array();
-                    // }
-
-                    // $this->cache_prefix = (isset($this->embed_vars['cache_prefix'])) ? $this->embed_vars['cache_prefix'] : '';
 
                     // get the "group/template" part of the tag plus site ID
                     $fetch_data = $this->_get_fetch_data($parts[0]);
@@ -432,7 +424,7 @@ class EE_Template
 
                     list($template_group, $template_name, $site_id) = $fetch_data;
 
-                    $partial = $this->fetch_template($template_group, $template_name, false, 1, true);
+                    $partial = $this->fetch_template($template_group, $template_name, false, $site_id, true);
 
                     if (!$partial) {
                         $partial = '';
@@ -2490,6 +2482,7 @@ class EE_Template
             $template,
             ($show_default ? 'true' : 'false'),
             $site_id,
+            $is_partial,
         ]);
 
         $query = isset(ee()->session) ? ee()->session->cache(__CLASS__, $cacheKey) : false;
