@@ -2480,7 +2480,7 @@ class EE_Template
      */
     public function fetch_template($template_group, $template, $show_default = true, $site_id = '', $is_partial = false)
     {
-        if ($site_id == '' or !is_numeric($site_id)) {
+        if ($site_id == '' || !is_numeric($site_id)) {
             $site_id = ee()->config->item('site_id');
         }
 
@@ -2513,9 +2513,9 @@ class EE_Template
 
             if (
                 $this->depth == 0
-                and substr($template, 0, 1) == $hidden_indicator
-                and ee()->uri->page_query_string == ''
-                and !$is_partial
+                && substr($template, 0, 1) == $hidden_indicator
+                && ee()->uri->page_query_string == ''
+                && !$is_partial
             ) { // Allow hidden templates to be used for Pages requests
                 /* -------------------------------------------
                 /*  Hidden Configuration Variable
@@ -2528,7 +2528,7 @@ class EE_Template
                 if (ee()->config->item('hidden_template_404') !== 'n') {
                     $x = explode("/", ee()->config->item('site_404'));
 
-                    if (isset($x[0]) and isset($x[1])) {
+                    if (isset($x[0]) && isset($x[1])) {
                         ee()->output->out_type = '404';
                         $this->template_type = '404';
 
