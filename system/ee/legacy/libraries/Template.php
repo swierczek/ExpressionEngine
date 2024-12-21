@@ -427,7 +427,7 @@ class EE_Template
                     $partial = $this->fetch_template($template_group, $template_name, false, $site_id, true);
 
                     if (!$partial) {
-                        $partial = '';
+                        continue;
                     }
 
                     $this->template = str_replace($matches[0][$key], $partial, $this->template);
