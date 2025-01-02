@@ -182,8 +182,8 @@
 .modal-confirm-rename-file {
   position: fixed;
 
-  @include m-custom-down(999px) {
-    width: calc(90% - 200px);
-    transform: translateX(100px);
-  }
+  // @include m-custom-down(999px) {
+  //   width: calc(90% - 200px);
+  //   transform: translateX(100px);
+  // }
 }

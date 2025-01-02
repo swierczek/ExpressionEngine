@@ -129,7 +129,8 @@ if (! AJAX_REQUEST) {
             );
 
             $modal = $this->make('ee:_shared/modal_confirm_delete')->render($modal_vars);
-            echo $modal;
+            ee('CP/Modal')->addModal('modal-confirm-delete-file', $modal);
+            // echo $modal;
 
             // Move file modal
             $moveChoices = [];
@@ -154,7 +155,9 @@ if (! AJAX_REQUEST) {
             );
 
             $modal = $this->make('ee:files/modals/move')->render($modal_vars);
-            echo $modal;
+            ee('CP/Modal')->addModal('modal-confirm-move-file', $modal);
+
+            // echo $modal;
 
             // Rename modal
             $renameModal = ee('View')->make('files/modals/rename')->render([
@@ -164,7 +167,9 @@ if (! AJAX_REQUEST) {
                     'bulk_action' => 'rename'
                 ],
             ]);
-            echo $renameModal;
+
+            ee('CP/Modal')->addModal('modal-confirm-rename-file', $renameModal);
+            // echo $renameModal;
         }
         ?>
     </div>
