@@ -1302,15 +1302,10 @@ class ChannelEntry extends ContentModel
                         } elseif (ee()->config->item('auto_assign_cat_parents') == 'y') {
                             // we have to know if there are children in this group
                             $categoryChildrenCount = ee('Model')->get('Category')->filter('group_id', $cat_group->getId())->filter('parent_id', '!=', 0)->count();
-                            if ($categoryChildrenCount == 0) {
-                                // only single selection is allowed
-                                //$metadata['field_type'] = 'radio';
-                            } else {
+
+                            if ($categoryChildrenCount != 0) {
                                 $metadata['alertText'] = lang('cat_selection_is_multiple_auto_select_parent');
                             }
-                        } else {
-                            // only single selection is allowed
-                            //$metadata['field_type'] = 'radio';
                         }
                     }
 
