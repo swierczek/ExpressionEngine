@@ -250,13 +250,17 @@ jobs:
                 chrome-version: ${{ steps.get-chrome-version.outputs.chrome_version }}
                 install-chromedriver: true
                 install-dependencies: true
-            - run: chrome --version
+
+            - name: Update Chrome PATH
+              run: |
+                sudo ln -sf /opt/hostedtoolcache/setup-chrome/chromium/stable/x64/chrome /usr/bin/google-chrome
 
             - name: Output the Chrome version and info
               run: |
                 echo "Setup Chrome: ${{ steps.setup-chrome }}"
                 echo "Chrome version: ${{ steps.get-chrome-version.outputs.chrome_version }}"
                 chrome --version
+                chromedriver --version
 
             - name: Run Cypress Tests
               uses: cypress-io/github-action@v6
