@@ -257,27 +257,21 @@ jobs:
                 latest_version=$(curl -s 'https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Linux&num=1&offset=0' | jq -r '.[0].version')
                 major_version=$(echo $latest_version | cut -d '.' -f 1)
                 previous_major_version=$((major_version - 1))
-                previous_version="${previous_major_version}"
-                echo "Previous major version of Chrome: $previous_version"
-                echo "chrome_version=$previous_version" >> $GITHUB_OUTPUT
+                echo "Previous major version of Chrome: $previous_major_version"
+                echo "chrome_version=$previous_major_version" >> $GITHUB_OUTPUT
 
-            - name: Install Chrome
+            - name: Install Specific Chrome Version
               uses: browser-actions/setup-chrome@latest
+              id: setup-chrome
               with:
                 chrome-version: ${{ steps.get-chrome-version.outputs.chrome_version }}
-                install-chromedriver: true
-
-            - name: Output the Chrome version and info
-              run: |
-                echo "Chrome version: ${{ steps.get-chrome-version.outputs.chrome_version }}"
-                echo "Chrome Binary: ${{ steps.setup-chrome.outputs.chrome-path }}"
 
             - name: Run Cypress Tests
               if: matrix.php != '5.6'
               uses: cypress-io/github-action@v6
               with:
                 # spec: ${{ steps.specs.outputs.SPECS }}
-                browser: chrome
+                browser: ${{ steps.setup-chrome.outputs.chrome-path }}
                 working-directory: tests/cypress
                 record: true
                 parallel: true
@@ -291,7 +285,7 @@ jobs:
               if: matrix.php == '5.6'
               uses: cypress-io/github-action@v6
               with:
-                browser: chrome
+                browser: ${{ steps.setup-chrome.outputs.chrome-path }}
                 working-directory: tests/cypress
                 config: specPattern=cypress/integration/!(updater|pro)/**.ee6.js
                 record: true
