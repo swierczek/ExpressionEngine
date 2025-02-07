@@ -42,7 +42,6 @@ class Cp extends Logs
 
         if ($search = ee()->input->get_post('filter_by_keyword')) {
             $logs->search(['action', 'username', 'ip_address'], $search);
-            $sites->search(['Site.site_label'], $search);
         }
 
         $filters = ee('CP/Filter')
