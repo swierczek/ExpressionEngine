@@ -96,8 +96,6 @@ class Cp extends Logs
             ->offset($offset)
             ->all();
 
-        $sites = $sites->order('site_id')->all();
-
         $pagination = ee('CP/Pagination', $count)
             ->perPage($this->params['perpage'])
             ->currentPage($page)
@@ -105,7 +103,7 @@ class Cp extends Logs
 
         $vars = array(
             'logs' => $logs,
-            'sites' => $sites,
+            'sites' => $sites->all(),
             'pagination' => $pagination,
             'form_url' => $this->base_url->compile(),
         );
